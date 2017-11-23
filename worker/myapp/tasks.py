@@ -11,7 +11,7 @@ from selinon import SelinonTask
 
 class RetrieveTransactionsTask(SelinonTask):
     URL = "https://www.csast.csas.cz/webapi/api/v3/netbanking/my/transactions"
-    TOKEN = "3/srEu6I5NpglDal4equfztOrXlRFdjmsCpndRKcEcQRNX1xbzTQ8rAZ0Tc1kRglGn"
+    TOKEN = '3/DywBVF9tnpveEcnn6qi4qYy7tsCgUCY4j24Splh021Pp535WilPGzj66FAwtaZLh'
     API_KEY = "4b8d5c6b-2101-464b-a987-0571f8ead003"
 
     @staticmethod

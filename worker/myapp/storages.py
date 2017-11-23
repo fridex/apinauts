@@ -6,11 +6,15 @@
 # ######################################################################
 """Selinon SQL Database adapter - PostgreSQL."""
 
+import logging
 from selinon import DataStorage
+
+_logger = logging.getLogger(__name__)
 
 try:
     from sqlalchemy import (create_engine, Column, Integer, Sequence, String, Boolean, Float, ForeignKey)
     from sqlalchemy.dialects.postgresql import JSONB
+    from sqlalchemy.exc import IntegrityError
     from sqlalchemy.ext.declarative import declarative_base
     from sqlalchemy.orm import sessionmaker
 except ImportError:
@@ -69,7 +73,7 @@ class Transaction(_Base):
     __tablename__ = 'transaction'
 
     id = Column(Integer, Sequence('transaction_id'), primary_key=True)  # pylint: disable=invalid-name
-    bank_transaction_id = Column(String(16))
+    bank_transaction_id = Column(String(16), unique=True)
     title = Column(String(128))
     card_transaction = Column(Boolean)
     amount = Column(Float)
@@ -164,15 +168,27 @@ class SqlStorage(DataStorage):
     def store(self, node_args, flow_name, task_name, task_id, result):  # noqa
         assert self.is_connected()  # nosec
 
-        record = Result(node_args, flow_name, task_name, task_id, result)
-        try:
-            self.session.add(record)
-            self.session.commit()
-        except Exception:
-            self.session.rollback()
-            raise
+        for entry in result:
+            result = Transaction(
+                title=entry['title'],
+                amount=entry['amount'],
+                second_party=entry.get('secondParty'),
+                currency=entry.get('currency'),
+                category=None,
+                bank_transaction_id=entry['id'],
+                card_transaction=entry['cardTransaction']
+            )
+            try:
+                self.session.add(result)
+                self.session.commit()
+            except IntegrityError:
+                _logger.debug("Transaction with bank id %r is already stored", entry['id'])
+                self.session.rollback()
+            except Exception:
+                self.session.rollback()
+                raise
 
-        return record.id
+        return task_id
 
     def store_error(self, node_args, flow_name, task_name, task_id, exc_info):  # noqa
         # just to make pylint happy
