@@ -12,19 +12,15 @@
     <link href="bootstrap.min.css" rel="stylesheet">
     <link href="dashboard.css" rel="stylesheet">
     <style type="text/css">
-        #transactions {
-            display: none;
-        }
-
         #categories {
             display: none;
         }
 
         #budgets {
-            /* display: none; */
+            display: none;
         }
 
-        .badge>a {
+        .badge a {
             color: #aaaaaa;
         }
     </style>
@@ -109,24 +105,21 @@
             <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Transactions
+                        <a class="nav-link active" href="#" id="transactions-menu">Transactions
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Categories</a>
+                        <a class="nav-link" href="#" id="categories-menu">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Budgets</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"></a>
+                        <a class="nav-link" href="#" id="budgets-menu">Budgets</a>
                     </li>
                 </ul>
             </nav>
 
             <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-                <h1 class="section-name">Categories</h1>
+                <h1 class="section-name">Transactions</h1>
 
                 <div id="transactions">
                     <section class="row text-center placeholders">
@@ -308,113 +301,147 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.7.2/d3.min.js"></script>
     <script src="d3pie.min.js"></script>
-    <script>
-        var pie = new d3pie("pieChart", {
-            "header": {
-                "title": {
-                    "text": "Monthly Budget",
-                    "fontSize": 22,
-                    "font": "verdana"
-                },
-                "subtitle": {
-                    "color": "#999999",
-                    "fontSize": 10,
-                    "font": "verdana",
-                    "text": " "
-                },
-                "titleSubtitlePadding": 32
-            },
-            "size": {
-                "canvasHeight": 460,
-                "canvasWidth": 750,
-                "pieOuterRadius": "100%"
-            },
-            "data": {
-                "sortOrder": "random",
-                "content": [{
-                        "label": "Mortgage",
-                        "value": 12440,
-                        "color": "#0066cc"
-                    },
-                    {
-                        "label": "Car",
-                        "value": 5670,
-                        "color": "#003366"
-                    },
-                    {
-                        "label": "Food",
-                        "value": 2456,
-                        "color": "#336600"
-                    },
-                    {
-                        "label": "Entertainment",
-                        "value": 1298,
-                        "color": "#669966"
-                    },
-                    {
-                        "label": "Presents",
-                        "value": 890,
-                        "color": "#990000"
-                    },
-                    {
-                        "label": "Travel",
-                        "value": 460,
-                        "color": "#cc6600"
-                    },
-                    {
-                        "label": "Bills",
-                        "value": 8910,
-                        "color": "#65cc32"
-                    },
-                    {
-                        "label": "Remaining",
-                        "value": 3409,
-                        "color": "#a9a9a9"
-                    }
-                ]
-            },
-            "labels": {
-                "outer": {
-                    "format": "label-percentage2",
-                    "pieDistance": 32
-                },
-                "inner": {
-                    "format": "value",
-                    "hideWhenLessThanPercentage": 15
-                },
-                "mainLabel": {
-                    "font": "verdana"
-                },
-                "percentage": {
-                    "color": "#e1e1e1",
-                    "font": "verdana",
-                    "decimalPlaces": 0
-                },
-                "value": {
-                    "color": "#e1e1e1",
-                    "font": "verdana"
-                },
-                "lines": {
-                    "enabled": true,
-                    "color": "#cccccc"
-                },
-                "truncation": {
-                    "enabled": true
-                }
-            },
-            "effects": {
-                "pullOutSegmentOnClick": {
-                    "effect": "elastic",
-                    "speed": 400,
-                    "size": 8
-                }
-            }
-        });
-    </script>
-
     <script src="jquery.min.js"></script>
     <script src="tether.min.js"></script>
     <script src="bootstrap.min.js"></script>
+
+    <script>
+        var pie = null;
+
+        $('#budgets-menu').click(() => {
+            $('#transactions, #categories').hide();
+            $('#budgets').show();
+            $('.section-name').text('Budgets');
+            $('.sidebar .active').removeClass('active');
+            $('#budgets-menu').addClass('active');
+        });
+
+        $('#categories-menu').click(() => {
+            $('#transactions, #budgets').hide();
+            $('#categories').show();
+            $('.section-name').text('Categories');
+            $('.sidebar .active').removeClass('active');
+            $('#categories-menu').addClass('active');
+        });
+
+        $('#transactions-menu').click(() => {
+            $('#budgets, #categories').hide();
+            $('#transactions').show();
+            $('.section-name').text('Transactions');
+            $('.sidebar .active').removeClass('active');
+            $('#transactions-menu').addClass('active');
+
+            $('#pieChart').children().remove();
+
+            var pie = new d3pie("pieChart", {
+                "header": {
+                    "title": {
+                        "text": "Monthly Budget",
+                        "fontSize": 22,
+                        "font": "verdana"
+                    },
+                    "subtitle": {
+                        "color": "#999999",
+                        "fontSize": 10,
+                        "font": "verdana",
+                        "text": " "
+                    },
+                    "titleSubtitlePadding": 32
+                },
+                "size": {
+                    "canvasHeight": 460,
+                    "canvasWidth": 750,
+                    "pieOuterRadius": "100%"
+                },
+                "data": {
+                    "sortOrder": "random",
+                    "content": [{
+                            "label": "Mortgage",
+                            "value": 12440,
+                            "color": "#0066cc"
+                        },
+                        {
+                            "label": "Car",
+                            "value": 5670,
+                            "color": "#003366"
+                        },
+                        {
+                            "label": "Food",
+                            "value": 2456,
+                            "color": "#336600"
+                        },
+                        {
+                            "label": "Entertainment",
+                            "value": 1298,
+                            "color": "#669966"
+                        },
+                        {
+                            "label": "Presents",
+                            "value": 890,
+                            "color": "#990000"
+                        },
+                        {
+                            "label": "Travel",
+                            "value": 460,
+                            "color": "#cc6600"
+                        },
+                        {
+                            "label": "Bills",
+                            "value": 8910,
+                            "color": "#65cc32"
+                        },
+                        {
+                            "label": "Remaining",
+                            "value": 3409,
+                            "color": "#a9a9a9"
+                        }
+                    ]
+                },
+                "labels": {
+                    "outer": {
+                        "format": "label-percentage2",
+                        "pieDistance": 32
+                    },
+                    "inner": {
+                        "format": "value",
+                        "hideWhenLessThanPercentage": 15
+                    },
+                    "mainLabel": {
+                        "font": "verdana"
+                    },
+                    "percentage": {
+                        "color": "#e1e1e1",
+                        "font": "verdana",
+                        "decimalPlaces": 0
+                    },
+                    "value": {
+                        "color": "#e1e1e1",
+                        "font": "verdana"
+                    },
+                    "lines": {
+                        "enabled": true,
+                        "color": "#cccccc"
+                    },
+                    "truncation": {
+                        "enabled": true
+                    }
+                },
+                "effects": {
+                    "pullOutSegmentOnClick": {
+                        "effect": "elastic",
+                        "speed": 400,
+                        "size": 8
+                    }
+                }
+            });
+
+        });
+
+        $(document).ready(() => {
+            $('#transactions-menu').click();
+        });
+
+    </script>
 </body>
 
 </html>
