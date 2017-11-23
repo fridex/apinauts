@@ -351,25 +351,14 @@ definitions:
       flow_name: &flow_name_analysis
         type: string
         description: Selinon flow that should be run
-        example: "bayesianFlow"
+        example: "flow1"
       flow_arguments: &flow_arguments
         type: array
         description: List of arguments that should be supplied per flow
         items:
           $ref: "#/definitions/Any"
         example:
-          - ecosystem: "npm"
-            name: "serve-static"
-            version: "1.7.1"
-            force: true
-            recursive_limit: 0
-            force_graph_sync: false
-          - ecosystem: "maven"
-            name: "net.iharder:base64"
-            version: "2.3.9"
-            force: true
-            recursive_limit: 1
-            force_graph_sync: false
+          - event: "apinuts"
   SelectiveKwargs:
     type: object
     required:
@@ -385,93 +374,13 @@ definitions:
         items:
           type: string
         example:
-          - "github_details"
-          - "ResultCollector"
+          - "task1"
       flow_arguments:
         <<: *flow_arguments
       run_subsequent:
         type: boolean
         description: Run nodes that are dependent on tasks listed in task_names
         example: false
-  Filter:
-    type: object
-    required:
-      - '$filter'
-    additionalProperties: true
-    properties:
-      '$filter':
-        type: object
-        required:
-          - table
-        additionalProperties: true
-        properties:
-          table:
-            type: string
-            description: table to which the given query should be applied
-            example: "versions"
-          joins:
-            type: array
-            description: List of joins that should be applied (defaults to NATURAL JOIN)
-            items:
-              $ref: "#/definitions/Any"
-            example:
-              - table: "packages"
-                'on':
-                  versions.package_id: "packages.id"
-              - table: "ecosystems"
-                'on':
-                  ecosystems.id: "packages.ecosystem_id"
-          where:
-            type: object
-            description: WHERE clause that should be applied
-            example:
-              packages.name: "serve-static"
-          select:
-            type: array
-            description: SELECT filtering
-            items:
-              type: string
-            example:
-              - "packages.name as name"
-              - "ecosystems.name as ecosystem"
-              - "versions.identifier as version"
-  GitHubManifestsKwargs:
-    type: object
-    required:
-      - repositories
-    properties:
-      repositories:
-        type: array
-        description: Array of keyword arguments for githubManifestMetadata flow
-        items:
-          $ref: "#/definitions/Any"
-        example:
-          - ecosystem: "maven"
-            repo_name: "omalley/base64"
-            force: true
-            recursive_limit: 0
-            force_graph_sync: false
-          - ecosystem: "maven"
-            repo_name: "jeremyh/jBCrypt"
-            force: true
-            recursive_limit: 0
-            force_graph_sync: false
-  GitHubAggregateManifestPkgsKwargs:
-    type: object
-    required:
-      - repositories
-    properties:
-      repositories:
-        type: array
-        description: Array of repositories from which to aggregate packages
-        items:
-          $ref: "#/definitions/Any"
-        example:
-          - ecosystem: "maven"
-            repo_name: "omalley/base64"
-          - ecosystem: "maven"
-            repo_name: "jeremyh/jBCrypt"
-
   Any:
     type: object
     additionalProperties: true
