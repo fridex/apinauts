@@ -55,6 +55,12 @@ class Category(_Base):
         self.name = name
         self.hidden = hidden
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'hidden': self.hidden
+        }
+
 
 class Transaction(_Base):
     """Record for transactions"""
@@ -165,7 +171,7 @@ class SqlStorage(DataStorage):
 
         return transaction.id
 
-    def create_categories(self, name, hidden):
+    def create_category(self, name, hidden):
         assert self.is_connected()
 
         category = Category(name, hidden)
@@ -178,9 +184,10 @@ class SqlStorage(DataStorage):
 
         return category.name
 
-     def get_categories(self):
+    def get_categories(self):
         assert self.is_connected()
-
         categories = self.session.query(Category).all()
-
-        return categories
+        result = []
+        for category in categories:
+            result.append(category.to_dict())
+        return result

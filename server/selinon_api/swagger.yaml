@@ -52,13 +52,12 @@ paths:
       responses:
         200:
           description: List of categories 
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/definitions/Category"
-  
+          #content:
+          #  application/json:
+          #    schema:
+          #      type: array
+          #      items:
+          #        $ref: "#/definitions/QueryKwargs"
 
 parameters:
   flow_name:
@@ -123,13 +122,13 @@ definitions:
     additionalProperties: true
     example:
       foo: "bar"
-  Category:
-    type: object
-    properties:
-      name:
-        type: string
-        description: Name of the category
-      hidden:
-        type: boolean
-        description: Is a category hidden
+  #Category:
+  #  type: object
+  #  properties:
+  #    name:
+  #      type: string
+  #      description: Name of the category
+  #    hidden:
+  #      type: boolean
+  #      description: Is a category hidden
 
