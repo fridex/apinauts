@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: API server for Selinon demo
+  title: API server for Apinuts
   version: "0.1"
 basePath: "/api/v1/"
 consumes:

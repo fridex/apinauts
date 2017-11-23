@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: API for Fabric8 Analytics Core Jobs
+  title: Periodic jobs configuration for Apinuts
   version: "0.1"
 basePath: "/api/v1/"
 consumes:
