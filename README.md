@@ -1,10 +1,14 @@
 # Apinauts hackathon
 
 
-*Contributors*
+# Contributors
+
 Pavel Odvody <podvody@redhat.com>
+
 Vaclav Pavlin <vpavlin@redhat.com>
+
 Frido Pokorny <fpokorny@redhat.com>
 
-*Instalation*
+# Instalation
+
 docker-compose up
