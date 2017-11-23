@@ -4,40 +4,31 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-amqp==2.2.2               # via amqp, kombu
-argcomplete==1.9.2        # via selinonlib
-billiard==3.5.0.3         # via billiard, celery
-celery==4.1.0             # via celery, selinon, selinonlib
-certifi==2017.7.27.1      # via requests
-chardet==3.0.4            # via requests
-click==6.7                # via clickclick, flask
-clickclick==1.2.2         # via connexion
-codegen==1.0              # via selinonlib
-colorama==0.3.9           # via rainbow-logging-handler
-connexion==1.1.16
-flask==0.12.2             # via connexion
-flexmock==0.10.2          # via selinonlib
-graphviz==0.8.1           # via selinonlib
-idna==2.6                 # via requests
-inflection==0.3.1         # via connexion
+apscheduler==3.3.1
+click==6.7                # via clickclick, flask, json2sql
+clickclick==1.2.1         # via connexion
+connexion==1.1.5
+daiquiri==1.3.0           # via json2sql
+flask-oauthlib==0.9.3
+flask-script==2.0.5
+flask==0.12               # via connexion, flask-oauthlib, flask-script
 itsdangerous==0.24        # via flask
-jinja2==2.9.6             # via flask
-jsonschema==2.6.0         # via connexion, selinon, swagger-spec-validator
-kombu==4.1.0              # via celery, kombu
-logutils==0.3.5           # via rainbow-logging-handler
-markupsafe==1.0           # via jinja2
-pathlib==1.0.1            # via connexion
-pytz==2017.2              # via celery
-pyyaml==3.12              # via clickclick, connexion, selinonlib
-rainbow-logging-handler==2.2.2  # via selinonlib
-raven==6.2.1
-redis==2.10.6             # via selinon
-requests==2.18.4          # via connexion
-selinon==0.1.0rc5
-selinonlib==0.1.0rc5      # via selinon
-six==1.11.0               # via connexion, swagger-spec-validator
-swagger-spec-validator==2.1.0  # via connexion
-typing==3.6.2             # via connexion
-urllib3==1.22             # via requests
-vine==1.1.4               # via amqp, vine
-werkzeug==0.12.2          # via flask
+jinja2==2.9.5             # via flask
+json2sql==1.0.0rc1
+jsonschema==2.6.0         # via connexion, swagger-spec-validator
+markupsafe==0.23          # via jinja2
+mosql==0.11               # via json2sql
+oauthlib==2.0.2           # via flask-oauthlib, requests-oauthlib
+pytimeparse==1.1.6
+pytz==2016.10             # via apscheduler, tzlocal
+pyyaml==3.12              # via clickclick, connexion, json2sql
+requests-oauthlib==0.8.0  # via flask-oauthlib
+requests==2.13.0          # via connexion, requests-oauthlib
+six==1.10.0               # via apscheduler, connexion, sqlalchemy-utils, swagger-spec-validator
+sqlalchemy-utils==0.32.14
+sqlalchemy==1.1.9         # via sqlalchemy-utils
+strict-rfc3339==0.7       # via connexion
+swagger-spec-validator==2.0.2  # via connexion
+tzlocal==1.3              # via apscheduler
+uwsgi==2.0.14
+werkzeug==0.11.15         # via flask

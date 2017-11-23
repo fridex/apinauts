@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# ######################################################################
-# Copyright (C) 2016-2017  Fridolin Pokorny, fridolin.pokorny@gmail.com
-# This file is part of Selinon project.
-# ######################################################################
+#!/usr/bin/python3
 
 import os
 from setuptools import setup, find_packages
@@ -14,26 +9,29 @@ def get_requirements():
     with open(requirements_txt) as fd:
         return fd.read().splitlines()
 
+
 setup(
-    name='selinon_api',
+    name='jobs',
     version='0.1',
     packages=find_packages(),
     package_data={
-        'selinon_api': [
-            'swagger.yaml'
+        'jobs': [
+            'swagger.yaml',
+            os.path.join('default_jobs', '*.yaml'),
+            os.path.join('default_jobs', '*.yml')
         ]
     },
-    scripts=['selinon-api.py'],
+    scripts=['jobs-api.py'],
     install_requires=get_requirements(),
     include_package_data=True,
     author='Fridolin Pokorny',
-    author_email='fridolin.pokorny@gmail.com',
+    author_email='fridolin@redhat.com',
     maintainer='Fridolin Pokorny',
-    maintainer_email='fridolin.pokorny@gmail.com',
-    description='Selinon demo API server',
-    license='MIT',
-    keywords='selinon celery',
-    url='https://github.com/selinon/demo',
+    maintainer_email='fridolin@redhat.com',
+    description='fabric8-analytics Core job service',
+    license='ASL 2.0',
+    keywords='jobs',
+    url='https://github.com/selinon/selinon',
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.4",

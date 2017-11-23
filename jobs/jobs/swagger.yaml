@@ -1,0 +1,477 @@
+swagger: "2.0"
+info:
+  title: API for Fabric8 Analytics Core Jobs
+  version: "0.1"
+basePath: "/api/v1/"
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  auth_token:
+    type: "apiKey"
+    name: "auth-token"
+    in: "header"
+
+paths:
+  /liveness:
+    get:
+      tags: [Service settings]
+      operationId: jobs.api_v1.get_liveness
+      summary: Get job service liveness
+      responses:
+        200:
+          description: Service is alive
+  /readiness:
+    get:
+      tags: [Service settings]
+      operationId: jobs.api_v1.get_readiness
+      summary: Get job service readiness
+      responses:
+        200:
+          description: Service is ready
+  /service/state:
+    get:
+      tags: [Service settings]
+      operationId: jobs.api_v1.get_service_state
+      summary: Get job service state
+      security:
+        - auth_token: []
+      responses:
+        200:
+          description: State of the job service
+        401:
+          description: No suitable permissions
+    put:
+      tags: [Service settings]
+      operationId: jobs.api_v1.put_service_state
+      summary: Pause or resume job execution
+      parameters:
+        - $ref: "#/parameters/state"
+      security:
+        - auth_token: []
+      responses:
+        200:
+          description: Information about job execution
+        401:
+          description: No suitable permissions
+  /jobs:
+    get:
+      tags: [Jobs options]
+      operationId: jobs.api_v1.get_jobs
+      summary: Get all pending jobs
+      parameters:
+        - $ref: "#/parameters/job_type"
+      security:
+        - auth_token: []
+      responses:
+        200:
+          description: All active jobs
+        401:
+          description: No suitable permissions
+  '/jobs/{job_id}':
+    delete:
+       tags: [Jobs options]
+       operationId: jobs.api_v1.delete_jobs
+       summary: Delete a job
+       parameters:
+        - $ref: "#/parameters/job_id_path"
+       security:
+        - auth_token: []
+       responses:
+         200:
+           description: Job with the given id was removed
+         401:
+           description: No suitable permissions
+    put:
+      tags: [Jobs options]
+      operationId: jobs.api_v1.put_jobs
+      summary: Jobs state manipulation
+      parameters:
+        - $ref: "#/parameters/job_id_path"
+        - $ref: "#/parameters/state"
+      security:
+        - auth_token: []
+      responses:
+        200:
+          description: New analyses job scheduled
+        401:
+          description: No suitable permissions
+  '/jobs/clean-failed':
+    delete:
+       tags: [Jobs options]
+       operationId: jobs.api_v1.delete_clean_failed
+       summary: Delete all failed jobs
+       security:
+         - auth_token: []
+       responses:
+         200:
+           description: All failed jobs were deleted
+         400:
+           description: Error describing issue in your SQL query or error on querying
+         401:
+           description: No suitable permissions
+  '/jobs/flow-scheduling':
+    post:
+      tags: [Add new jobs]
+      operationId: jobs.api_v1.post_flow_scheduling
+      summary: Schedule a new job for analyses
+      parameters:
+        - $ref: "#/parameters/job_id"
+        - $ref: "#/parameters/periodically"
+        - $ref: "#/parameters/when"
+        - $ref: "#/parameters/misfire_grace_time"
+        - $ref: "#/parameters/state"
+        - name: kwargs
+          in: body
+          required: false
+          description: Job keyword arguments for analyses scheduling
+          schema:
+            $ref: "#/definitions/FlowKwargs"
+      security:
+        - auth_token: []
+      responses:
+        201:
+          description: New analyses job scheduled
+        401:
+          description: No suitable permissions
+  '/jobs/selective-flow-scheduling':
+    post:
+      tags: [Add new jobs]
+      operationId: jobs.api_v1.post_selective_flow_scheduling
+      summary: Schedule a new job for analyses only with selected tasks marked for execution
+      parameters:
+        - $ref: "#/parameters/job_id"
+        - $ref: "#/parameters/periodically"
+        - $ref: "#/parameters/when"
+        - $ref: "#/parameters/misfire_grace_time"
+        - $ref: "#/parameters/state"
+        - name: kwargs
+          in: body
+          required: false
+          description: Job keyword arguments for selective analyses scheduling
+          schema:
+            $ref: "#/definitions/SelectiveKwargs"
+      security:
+        - auth_token: []
+      responses:
+        201:
+          description: New analyses job scheduled
+        401:
+          description: No suitable permissions
+
+parameters:
+  job_id_path:
+    name: job_id
+    in: path
+    required: true
+    description: Job identifier
+    type: string
+  job_id:
+    name: job_id
+    in: query
+    required: false
+    description: Job identifier
+    type: string
+  periodically:
+    name: periodically
+    in: query
+    type: string
+    required: false
+    description: Set periodical job execution
+  when:
+    name: when
+    in: query
+    type: string
+    required: false
+    description: Date time in UTC when the job run should be scheduled
+  misfire_grace_time:
+    name: misfire_grace_time
+    in: query
+    type: string
+    required: false
+    description: Time how much job’s execution is allowed to be late before throwing away
+  state:
+    name: state
+    in: query
+    required: true
+    description: State
+    type: string
+    items:
+      type: string
+    enum:
+      - paused
+      - running
+  job_type:
+     name: job_type
+     in: query
+     required: false
+     description: Job specific listing
+     type: string
+     items:
+       type: string
+     enum:
+       - all
+       - failed
+       - user
+  popular:
+    name: popular
+    in: query
+    required: false
+    description: Sorted by popularity
+    type: boolean
+    default: false
+  ecosystem:
+     name: ecosystem
+     in: query
+     required: true
+     description: Ecosystem
+     type: string
+     items:
+       type: string
+     enum:
+       - maven
+       - npm
+       - pypi
+       - nuget
+       - go
+  count:
+    name: count
+    in: query
+    required: false
+    description: Number (or dash-separated range) of items
+    type: string
+  min_stars:
+    name: min_stars
+    in: query
+    required: false
+    description: Minimum number of GitHub stars
+    type: integer
+  max_stars:
+    name: max_stars
+    in: query
+    required: false
+    description: Maximum number of GitHub stars
+    type: integer
+  skip_if_exists:
+    name: skip_if_exists
+    in: query
+    required: false
+    description: Do not process repositories for which results already exist
+    type: boolean
+    default: true
+  start_from:
+    name: start_from
+    in: query
+    required: false
+    description: Skip first <number> most starred projects
+    type: integer
+  nversions:
+    name: nversions
+    in: query
+    required: false
+    description: Number of versions of each item (1 means latest version only)
+    type: integer
+  force:
+    name: force
+    in: query
+    required: false
+    description: Force analyses scheduling
+    type: boolean
+    default: false
+  force_graph_sync:
+    name: force_graph_sync
+    in: query
+    required: false
+    description: Force graph synchronization of if already analysed
+    type: boolean
+    default: false
+  start:
+    name: start
+    in: query
+    required: false
+    description: Analysis id to start syncing at
+    type: integer
+  end:
+    name: end
+    in: query
+    required: false
+    description: Analysis id to end syncing at
+    type: integer
+  from_date:
+    name: from_date
+    in: query
+    required: false
+    description: Limit by date and time
+    type: string
+  to_date:
+    name: to_date
+    in: query
+    required: false
+    description: Limit by date and time
+    type: string
+  recursive_limit:
+    name: recursive_limit
+    in: query
+    required: false
+    description: Number of recursive analyses
+    type: integer
+  bucket_name:
+    name: bucket_name
+    in: query
+    required: true
+    description: Name of the bucket to manipulate with
+    type: string
+  object_key:
+    name: object_key
+    in: query
+    required: true
+    description: Object key to manipulate with on S3
+    type: string
+  queues:
+    name: queues
+    in: query
+    required: true
+    description: A comma-separated list of queues to purge, without deployment prefix or star for all queues in deployment
+    type: string
+  offset:
+    name: offset
+    in: query
+    required: true
+    description: Offset to be used (positive integer)
+    type: integer
+
+definitions:
+  FlowKwargs:
+    type: object
+    required:
+      - flow_name
+      - flow_arguments
+    properties:
+      flow_name: &flow_name_analysis
+        type: string
+        description: Selinon flow that should be run
+        example: "bayesianFlow"
+      flow_arguments: &flow_arguments
+        type: array
+        description: List of arguments that should be supplied per flow
+        items:
+          $ref: "#/definitions/Any"
+        example:
+          - ecosystem: "npm"
+            name: "serve-static"
+            version: "1.7.1"
+            force: true
+            recursive_limit: 0
+            force_graph_sync: false
+          - ecosystem: "maven"
+            name: "net.iharder:base64"
+            version: "2.3.9"
+            force: true
+            recursive_limit: 1
+            force_graph_sync: false
+  SelectiveKwargs:
+    type: object
+    required:
+      - flow_name
+      - task_names
+      - flow_arguments
+    properties:
+      flow_name:
+        <<: *flow_name_analysis
+      task_names: &task_names
+        type: array
+        description: A list of tasks that should be run
+        items:
+          type: string
+        example:
+          - "github_details"
+          - "ResultCollector"
+      flow_arguments:
+        <<: *flow_arguments
+      run_subsequent:
+        type: boolean
+        description: Run nodes that are dependent on tasks listed in task_names
+        example: false
+  Filter:
+    type: object
+    required:
+      - '$filter'
+    additionalProperties: true
+    properties:
+      '$filter':
+        type: object
+        required:
+          - table
+        additionalProperties: true
+        properties:
+          table:
+            type: string
+            description: table to which the given query should be applied
+            example: "versions"
+          joins:
+            type: array
+            description: List of joins that should be applied (defaults to NATURAL JOIN)
+            items:
+              $ref: "#/definitions/Any"
+            example:
+              - table: "packages"
+                'on':
+                  versions.package_id: "packages.id"
+              - table: "ecosystems"
+                'on':
+                  ecosystems.id: "packages.ecosystem_id"
+          where:
+            type: object
+            description: WHERE clause that should be applied
+            example:
+              packages.name: "serve-static"
+          select:
+            type: array
+            description: SELECT filtering
+            items:
+              type: string
+            example:
+              - "packages.name as name"
+              - "ecosystems.name as ecosystem"
+              - "versions.identifier as version"
+  GitHubManifestsKwargs:
+    type: object
+    required:
+      - repositories
+    properties:
+      repositories:
+        type: array
+        description: Array of keyword arguments for githubManifestMetadata flow
+        items:
+          $ref: "#/definitions/Any"
+        example:
+          - ecosystem: "maven"
+            repo_name: "omalley/base64"
+            force: true
+            recursive_limit: 0
+            force_graph_sync: false
+          - ecosystem: "maven"
+            repo_name: "jeremyh/jBCrypt"
+            force: true
+            recursive_limit: 0
+            force_graph_sync: false
+  GitHubAggregateManifestPkgsKwargs:
+    type: object
+    required:
+      - repositories
+    properties:
+      repositories:
+        type: array
+        description: Array of repositories from which to aggregate packages
+        items:
+          $ref: "#/definitions/Any"
+        example:
+          - ecosystem: "maven"
+            repo_name: "omalley/base64"
+          - ecosystem: "maven"
+            repo_name: "jeremyh/jBCrypt"
+
+  Any:
+    type: object
+    additionalProperties: true

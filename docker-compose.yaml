@@ -30,13 +30,16 @@ services:
     container_name: apinauts-jobs
     network_mode: bridge
     privileged: true
-    ports:
-      - 30000:30000
     links:
       - broker
       - redis
+      - postgres
+    restart: on-failure
+    ports:
+      - 30000:30000
     volumes:
-      - ./worker/myapp:/usr/lib/python3.5/site-packages/myapp:ro,z
+      - ./worker/myapp:/usr/lib/python3.4/site-packages/myapp:ro,z
+      - ./jobs/jobs:/usr/lib/python3.4/site-packages/jobs:ro,z
       #- ./selinon/selinon:/usr/lib/python3.5/site-packages/selinon:ro,z
       #- ./selinonlib/selinonlib:/usr/lib/python3.5/site-packages/selinonlib:ro,z
     environment:

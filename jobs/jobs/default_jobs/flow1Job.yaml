@@ -1,0 +1,11 @@
+---
+  handler: FlowScheduling
+  job_id: flow1Job
+  flow_name: flow1
+  flow_arguments:
+    -
+  when:
+  periodically: 1 day
+  # Keep this high so redeployment/downtime does not affect flow scheduling
+  misfire_grace_time: 365 days
+  state: paused

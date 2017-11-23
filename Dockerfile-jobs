@@ -1,15 +1,16 @@
-FROM fedora:24
-MAINTAINER Fridolin Pokorny <fridolin.pokorny@redhat.com>
-ENV LANG=en_US.utf8
+FROM registry.centos.org/centos/centos:7
+MAINTAINER Fridolin Pokorny <fridolin@redhat.com>
 
-# Install server
-COPY server /tmp/server
-RUN pushd /tmp/server && \
-  pip3 install . && \
-  popd && \
-  rm -rf /tmp/server
+ENV LANG=en_US.UTF-8 \
+    MAVEN_INDEX_CHECKER_PATH='/opt/maven-index-checker' \
+    F8A_WORKER_VERSION=662a102
 
-# Install worker files, we need them mainly because of configs and Celery settings establishment
+RUN useradd coreapi
+
+RUN yum install -y epel-release && \
+    yum install -y python34-devel python34-pip postgresql-devel gcc git maven zip unzip && \
+    yum clean all
+
 COPY worker /tmp/worker
 RUN pushd /tmp/worker && \
   pip3 install . && \
@@ -17,12 +18,19 @@ RUN pushd /tmp/worker && \
   rm -rf /tmp/worker
 
 # Install Selinonlib and Selinon manually so we have latest master
-COPY hack/install_selinon.sh /tmp/
-RUN /tmp/install_selinon.sh && rm /tmp/install_selinon.sh
+COPY hack/install_selinon_yum.sh /tmp/
+RUN /tmp/install_selinon_yum.sh && rm /tmp/install_selinon_yum.sh
 
-RUN dnf install -y python3-devel postgresql-devel gcc redhat-rpm-config
+RUN yum install -y python3-devel postgresql-devel gcc redhat-rpm-config
 RUN pip3 install SQLAlchemy SQLAlchemy-Utils psycopg2
-RUN useradd server --create-home
-WORKDIR /home/server
-USER server
-CMD ["selinon-api.py"]
+
+COPY ./jobs /tmp/jobs_install/
+RUN pushd /tmp/jobs_install &&\
+  pip3 install . &&\
+  popd &&\
+  rm -rf /tmp/jobs_install
+
+COPY jobs/hack/run_jobs.sh /usr/bin/
+
+USER coreapi
+CMD ["/usr/bin/run_jobs.sh"]

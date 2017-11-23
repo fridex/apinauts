@@ -1,3 +1,8 @@
 connexion>=1.0.31
-selinon
-raven
+apscheduler
+pytimeparse
+Flask-Script
+uwsgi
+json2sql
+Flask-OAuthlib
+SQLAlchemy-Utils
