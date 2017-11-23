@@ -16,7 +16,7 @@ services:
       - broker
       - redis
     volumes:
-      - ./worker/apinauts:/usr/lib/python3.5/site-packages/apinauts:ro,z
+      - ./worker/myapp:/usr/lib/python3.5/site-packages/myapp:ro,z
       #- ./selinon/selinon:/usr/lib/python3.5/site-packages/selinon:ro,z
       #- ./selinonlib/selinonlib:/usr/lib/python3.5/site-packages/selinonlib:ro,z
     environment:
@@ -33,7 +33,7 @@ services:
       - redis
       - postgres
     volumes:
-      - ./worker/apinauts:/usr/lib/python3.5/site-packages/apinauts:ro,z
+      - ./worker/myapp:/usr/lib/python3.5/site-packages/myapp:ro,z
       #- ./selinon/selinon:/usr/lib/python3.5/site-packages/selinon:ro,z
       #- ./selinonlib/selinonlib:/usr/lib/python3.5/site-packages/selinonlib:ro,z
     environment:
@@ -51,25 +51,25 @@ services:
       - 5672:5672
       - 35000:15672
 
+  flower:
+    image: endocode/flower
+    container_name: apinauts-flower
+    network_mode: bridge
+    ports:
+      - 36000:5555
+    links:
+      - broker
+    environment:
+      RABBITMQ_SERVICE_SERVICE_HOST: broker
+
+  ## Databases
+
   redis:
     image: redis:3.2.1
     container_name: apinauts-redis
     network_mode: bridge
     ports:
       - 6379:6379
-
-  #flower:
-  #  image: endocode/flower
-  #  container_name: apinauts-flower
-  #  network_mode: bridge
-  #  ports:
-  #    - 36000:5555
-  #  links:
-  #    - broker
-  #  environment:
-  #    RABBITMQ_SERVICE_SERVICE_HOST: broker
-
-  ## Databases
 
   postgres:
     image: postgres:9.5
@@ -80,6 +80,8 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
+  ## Database frondends
 
   pgweb:
     image: sosedoff/pgweb

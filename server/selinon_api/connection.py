@@ -6,7 +6,7 @@
 # ######################################################################
 
 from selinon import run_flow
-from apinauts.configuration import init
+from myapp.configuration import init
 
 
 class Connection(object):

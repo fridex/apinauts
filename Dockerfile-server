@@ -23,4 +23,4 @@ RUN /tmp/install_selinon.sh && rm /tmp/install_selinon.sh
 RUN useradd server --create-home
 WORKDIR /home/server
 USER server
-CMD ["apinuats-api.py"]
+CMD ["selinon-api.py"]

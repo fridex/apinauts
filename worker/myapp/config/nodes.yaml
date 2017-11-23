@@ -2,13 +2,13 @@
   tasks:
     - name: hello_task
       classname: HelloTask
-      import: apinauts.tasks
+      import: myapp.tasks
       max_retry: 0
       queue: task1_v0
 
     - name: fibonacci_task
       classname: FibonacciTask
-      import: apinauts.tasks
+      import: myapp.tasks
       max_retry: 0
       queue: fibonacciTask_v0
       storage: Redis

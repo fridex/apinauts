@@ -25,7 +25,7 @@ def init(with_result_backend=False):
     if with_result_backend:
         conf['result_backend'] = os.environ.get('RESULT_BACKEND_URL', 'redis://redis:6379/0')
 
-    app = Celery('apinauts')
+    app = Celery('myapp')
     app.config_from_object(conf)
 
     flow_definition_files = []

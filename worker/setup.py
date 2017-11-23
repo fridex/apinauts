@@ -19,7 +19,7 @@ setup(
     version='0.1',
     packages=find_packages(),
     package_data={
-        'apinauts': [
+        'myapp': [
             os.path.join('config', '*.yaml'),
             os.path.join('config', '*.yml'),
             os.path.join('config', 'flows', '*.yaml'),

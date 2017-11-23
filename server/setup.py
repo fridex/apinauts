@@ -15,15 +15,15 @@ def get_requirements():
         return fd.read().splitlines()
 
 setup(
-    name='apinauts_api',
+    name='selinon_api',
     version='0.1',
     packages=find_packages(),
     package_data={
-        'apinauts_api': [
+        'selinon_api': [
             'swagger.yaml'
         ]
     },
-    scripts=['apinauts-api.py'],
+    scripts=['selinon-api.py'],
     install_requires=get_requirements(),
     include_package_data=True,
     author='Fridolin Pokorny',
@@ -33,7 +33,7 @@ setup(
     description='Selinon demo API server',
     license='MIT',
     keywords='selinon celery',
-    url='https://github.com/selinon',
+    url='https://github.com/selinon/demo',
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.4",
