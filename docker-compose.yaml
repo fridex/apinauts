@@ -23,6 +23,26 @@ services:
       SERVICE_PORT: 34000
       BROKER_URL: amqp://broker:5672
 
+  jobs:
+    build:
+      context: .
+      dockerfile: Dockerfile-jobs
+    container_name: apinauts-jobs
+    network_mode: bridge
+    privileged: true
+    ports:
+      - 30000:30000
+    links:
+      - broker
+      - redis
+    volumes:
+      - ./worker/myapp:/usr/lib/python3.5/site-packages/myapp:ro,z
+      #- ./selinon/selinon:/usr/lib/python3.5/site-packages/selinon:ro,z
+      #- ./selinonlib/selinonlib:/usr/lib/python3.5/site-packages/selinonlib:ro,z
+    environment:
+      SERVICE_PORT: 30000
+      BROKER_URL: amqp://broker:5672
+
   worker:
     build:
       context: .
