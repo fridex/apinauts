@@ -116,9 +116,10 @@ parameters:
   hidden:
     name: hidden
     in: query
-    required: false
+    required: true
     description: Is category hidden
     type: boolean
+    default: false
   category_in_path:
     name: category
     in: path
