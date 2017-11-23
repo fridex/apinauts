@@ -3,7 +3,7 @@
   job_id: flow1Job
   flow_name: flow1
   flow_arguments:
-    -
+    - event: apinauts
   when:
   periodically: 10 seconds
   misfire_grace_time: 365 days
