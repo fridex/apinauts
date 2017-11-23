@@ -71,7 +71,7 @@ class Transaction(_Base):
     category = Column(String, ForeignKey(Category.name))
 
     def __init__(self, title, amount, second_party, currency, category, bank_transaction_id=None, card_transaction=False):
-        self.bank_transaction_id = id
+        self.bank_transaction_id = bank_transaction_id
         self.title = title
         self.card_transaction = card_transaction
         self.amount = amount
@@ -96,6 +96,7 @@ class Budget(_Base):
         self.month = month
         self.year = year
         self.amount = amount
+
 
 class SqlStorage(DataStorage):
     """Selinon SQL Database adapter - PostgreSQL."""
