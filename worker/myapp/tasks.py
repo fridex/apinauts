@@ -58,4 +58,12 @@ class RetrieveTransactionsTask(SelinonTask):
             data, page = self.get_transactions(self.URL, self.TOKEN, self.API_KEY, page)
             result += data
 
-        return result
+        return {
+            'added': self.storage.store_transactions(result)
+        }
+
+
+class AssignCategoryTask(SelinonTask):
+    def run(self, node_args):
+        for bank_id in node_args.get('added', []):
+            print(bank_id)

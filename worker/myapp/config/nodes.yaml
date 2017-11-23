@@ -6,6 +6,13 @@
       max_retry: 0
       queue: task1_v0
       storage: PostgreSQL
+    - name: assign_category
+      classname: AssignCategoryTask
+      import: myapp.tasks
+      max_retry: 0
+      queue: task1_v0
+      storage: PostgreSQL
+      storage_readonly: true
 
   flows:
     - flow1
