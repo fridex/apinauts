@@ -20,6 +20,20 @@ paths:
       responses:
         201:
           description: Flow was scheduled
+  /transactions:
+    post:
+      tags: [Transactions]
+      operationId: selinon_api.api_v1.post_transactions
+      summary: Create a transaction
+      parameters:
+        - $ref: "#/parameters/title"
+        - $ref: "#/parameters/category"
+        - $ref: "#/parameters/currency"
+        - $ref: "#/parameters/second_party"
+        - $ref: "#/parameters/amount"
+      responses:
+        200:
+          description: Transaction has been recorded
 
 parameters:
   flow_name:
@@ -35,6 +49,37 @@ parameters:
     description: Flow arguments
     schema:
       $ref: "#/definitions/QueryKwargs"
+  title:
+    name: title
+    in: body
+    required: true
+    description: Title of transaction
+    type: string
+  second_party:
+    name: second_party
+    in: body
+    required: true
+    description: Second party of transaction
+    type: string
+  currency:
+    name: currency
+    in: body
+    required: true
+    description: Currency of transaction
+    type: string
+  category:
+    name: category
+    in: body
+    required: true
+    description: Category of transaction
+    type: string
+  amount:
+    name: amount
+    in: body
+    required: true
+    description: Amount of transaction
+    type: number
+
 
 definitions:
   QueryKwargs:

@@ -8,6 +8,7 @@
 import logging
 from .connection import Connection
 from .connection import requires_initialized_selinon
+from selinon import StoragePool
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,3 +25,10 @@ def post_run_flow(flow_name, node_args=None):
     logger.info("Scheduling flow '%s' with node_args: '%s'", flow_name, node_args)
     dispatcher = Connection.run_selinon_flow(flow_name, node_args)
     return {"dispatcher_id": dispatcher.id, "flow_name": flow_name}, 201
+
+@requires_initialized_selinon
+def post_transaction(title, category, currency, second_party, amount):
+    logger.info("Saving transaction %s", title)
+    db = StoragePool.get_connected_storage("PostreSQL")
+    transaction_id = db.create_transaction(title, category, currency, second_party, amount)
+    return {"transaction_id": transaction_id}

@@ -51,7 +51,7 @@ class Category(_Base):
     name = Column(String(128), primary_key=True)
     hidden = Column(Boolean)
 
-    def __init__(self, name, hidden):
+    def __init__(self, name, hidden=False):
         self.name = name
         self.hidden = hidden
 
@@ -61,22 +61,23 @@ class Transaction(_Base):
 
     __tablename__ = 'transaction'
 
-    id = Column(String(16), primary_key=True)
+    id = Column(Integer, Sequence('transaction_id'), primary_key=True)  # pylint: disable=invalid-name
+    bank_transaction_id = Column(String(16))
     title = Column(String(128))
-    direction = Column(String(5))
     card_transaction = Column(Boolean)
     amount = Column(Float)
     second_party = Column(String(128))
     currency = Column(String(3))
+    category = Column(String, ForeignKey=Category.name)
 
-    def __init__(self, id, title, direction, card_transaction, amount, second_party, currency):
-        self.id = id
+    def __init__(self, title, amount, second_party, currency, category, bank_transaction_id=None, card_transaction=False):
+        self.bank_transaction_id = id
         self.title = title
-        self.direction = direction
         self.card_transaction = card_transaction
         self.amount = amount
         self.second_party = second_party
         self.currency = currency
+        self.category = category
 
 
 class Budget(_Base):
@@ -149,3 +150,16 @@ class SqlStorage(DataStorage):
     def store_error(self, node_args, flow_name, task_name, task_id, exc_info):  # noqa
         # just to make pylint happy
         raise NotImplementedError()
+
+    def create_transaction(self, title, category, currency, second_party, amount):
+        assert self.is_connected()
+
+        transaction = Transaction(title, amount, second_party, currency, category)
+        try:
+            self.session.add(transaction)
+            self.session.commit()
+        except Exception:
+            self.session.rollback()
+            raise
+
+        return transaction.id
