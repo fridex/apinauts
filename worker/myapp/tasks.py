@@ -5,9 +5,11 @@
 # This file is part of Selinon project.
 # ######################################################################
 
+import logging
 import requests
 from selinon import SelinonTask
 
+logger = logging.getLogger(__name__)
 
 class RetrieveTransactionsTask(SelinonTask):
     URL = "https://www.csast.csas.cz/webapi/api/v3/netbanking/my/transactions"
@@ -66,4 +68,30 @@ class RetrieveTransactionsTask(SelinonTask):
 class AssignCategoryTask(SelinonTask):
     def run(self, node_args):
         for bank_id in node_args.get('added', []):
-            print(bank_id)
+            transaction = self.storage.get_transaction_by_bank_id(bank_id)
+
+            already_stored = self.storage.get_transactions_by_title(transaction.title)
+            suggested_category = None
+            for entry in already_stored:
+                if entry.bank_transaction_id in node_args['added']:
+                    # Ignore new transactions
+                    continue
+
+                if not entry.category:
+                    break
+
+                if suggested_category and suggested_category != entry.category:
+                    suggested_category = None
+                    break
+
+                suggested_category = entry.category
+
+            if suggested_category:
+                transaction.category = suggested_category
+                try:
+                    self.storage.session.ad(transaction)
+                    logger.info("Assigned category for transaction %r: %r",
+                                transaction.bank_transaction_id, transaction.category)
+                except:
+                    self.storage.session.rollback()
+                    logger.exception("Failed to modify suggested category %r", suggested_category)

@@ -283,6 +283,13 @@ class SqlStorage(DataStorage):
             self.session.rollback()
         return result
 
+    def get_transaction_by_bank_id(self, bank_id):
+        try:
+            return self.session.query(Transaction).filter(Transaction.bank_transaction_id == bank_id).one()
+        except Exception:
+            self.session.rollback()
+            raise
+
     def create_budgets(self, category, month, year, amount):
         assert self.is_connected()
 
@@ -308,3 +315,17 @@ class SqlStorage(DataStorage):
             self.session.rollback()
         
         return result
+
+    def get_transactions_by_title(self, title):
+        try:
+            return self.session.query(Transaction).filter(Transaction.title == title).all()
+        except Exception:
+            self.session.rollback()
+            raise
+
+    def get_transactions_by_second_party(self, second_party):
+        try:
+            return self.session.query(Transaction).filter(Transaction.second_party == second_party).all()
+        except Exception:
+            self.session.rollback()
+            raise
