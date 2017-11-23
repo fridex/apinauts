@@ -48,12 +48,13 @@ class Category(_Base):
 
     __tablename__ = 'category'
 
-    name = Column(String(128), , primary_key=True)
+    name = Column(String(128), primary_key=True)
     hidden = Column(Boolean)
 
     def __init__(self, name, hidden):
         self.name = name
         self.hidden = hidden
+
 
 class Transaction(_Base):
     """Record for transactions"""
@@ -77,8 +78,11 @@ class Transaction(_Base):
         self.second_party = second_party
         self.currency = currency
 
+
 class Budget(_Base):
     """Record for budget"""
+
+    __tablename__ = 'budget'
 
     id = Column(Integer, Sequence('budget_id'), primary_key=True)  # pylint: disable=invalid-name
     category = Column(String(128)) #FIXME - how to do foreign key?
@@ -86,7 +90,7 @@ class Budget(_Base):
     year = Column(Integer)
     amount = Column(Float)
 
-    def __init__(self category, month, year, amount):
+    def __init__(self, category, month, year, amount):
         self.category = category
         self.month = month
         self.year = year
