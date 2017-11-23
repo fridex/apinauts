@@ -76,16 +76,16 @@ services:
       - 5672:5672
       - 35000:15672
 
-  flower:
-    image: endocode/flower
-    container_name: apinauts-flower
-    network_mode: bridge
-    ports:
-      - 36000:5555
-    links:
-      - broker
-    environment:
-      RABBITMQ_SERVICE_SERVICE_HOST: broker
+  # flower:
+  #   image: endocode/flower
+  #   container_name: apinauts-flower
+  #   network_mode: bridge
+  #   ports:
+  #     - 36000:5555
+  #   links:
+  #     - broker
+  #   environment:
+  #     RABBITMQ_SERVICE_SERVICE_HOST: broker
 
   ## Databases
 
