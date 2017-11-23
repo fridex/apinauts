@@ -15,6 +15,8 @@ RUN /tmp/install_selinon.sh && rm /tmp/install_selinon.sh
 
 COPY hack/worker.sh /usr/bin/
 
+RUN dnf install -y python3-devel postgresql-devel gcc redhat-rpm-config
+RUN pip3 install SQLAlchemy SQLAlchemy-Utils psycopg2
 RUN useradd worker --create-home
 WORKDIR /home/worker
 USER worker

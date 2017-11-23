@@ -20,6 +20,8 @@ RUN pushd /tmp/worker && \
 COPY hack/install_selinon.sh /tmp/
 RUN /tmp/install_selinon.sh && rm /tmp/install_selinon.sh
 
+RUN dnf install -y python3-devel postgresql-devel gcc redhat-rpm-config
+RUN pip3 install SQLAlchemy SQLAlchemy-Utils psycopg2
 RUN useradd server --create-home
 WORKDIR /home/server
 USER server

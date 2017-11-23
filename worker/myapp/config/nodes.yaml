@@ -5,6 +5,7 @@
       import: myapp.tasks
       max_retry: 0
       queue: task1_v0
+      storage: PostgreSQL
 
     - name: fibonacci_task
       classname: FibonacciTask
@@ -36,11 +37,11 @@
         db: 1
         charset: 'utf-8'
 
-    #- name: PostgreSQL
-    #  classname: SqlStorage
-    #  import: selinonlib.storages.sqlStorage
-    #  configuration:
-    #    connection_string: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
+    - name: PostgreSQL
+      classname: SqlStorage
+      import: myapp.storages
+      configuration:
+        connection_string: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
 
     #- name: AmazonS3
     #  classname: S3
