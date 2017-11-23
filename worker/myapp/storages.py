@@ -98,7 +98,7 @@ class Transaction(_Base):
             'amount': self.amount,
             'second_party': self.second_party,
             'currency': self.currency,
-            'category': self.category.name
+            'category': self.category
         }
 
 
