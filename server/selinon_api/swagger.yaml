@@ -27,9 +27,9 @@ paths:
       summary: Create a transaction
       parameters:
         - $ref: "#/parameters/title"
-        - $ref: "#/parameters/category"
         - $ref: "#/parameters/currency"
         - $ref: "#/parameters/second_party"
+        - $ref: "#/parameters/category"
         - $ref: "#/parameters/amount"
       responses:
         200:
@@ -51,31 +51,31 @@ parameters:
       $ref: "#/definitions/QueryKwargs"
   title:
     name: title
-    in: body
+    in: query
     required: true
     description: Title of transaction
     type: string
   second_party:
     name: second_party
-    in: body
+    in: query
     required: true
     description: Second party of transaction
     type: string
   currency:
     name: currency
-    in: body
+    in: query
     required: true
     description: Currency of transaction
     type: string
   category:
     name: category
-    in: body
+    in: query
     required: true
     description: Category of transaction
     type: string
   amount:
     name: amount
-    in: body
+    in: query
     required: true
     description: Amount of transaction
     type: number

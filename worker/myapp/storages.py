@@ -9,7 +9,7 @@
 from selinon import DataStorage
 
 try:
-    from sqlalchemy import (create_engine, Column, Integer, Sequence, String, Boolean, Float)
+    from sqlalchemy import (create_engine, Column, Integer, Sequence, String, Boolean, Float, ForeignKey)
     from sqlalchemy.dialects.postgresql import JSONB
     from sqlalchemy.ext.declarative import declarative_base
     from sqlalchemy.orm import sessionmaker
@@ -68,7 +68,7 @@ class Transaction(_Base):
     amount = Column(Float)
     second_party = Column(String(128))
     currency = Column(String(3))
-    category = Column(String, ForeignKey=Category.name)
+    category = Column(String, ForeignKey(Category.name))
 
     def __init__(self, title, amount, second_party, currency, category, bank_transaction_id=None, card_transaction=False):
         self.bank_transaction_id = id

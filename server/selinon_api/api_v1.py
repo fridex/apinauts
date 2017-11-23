@@ -26,9 +26,10 @@ def post_run_flow(flow_name, node_args=None):
     dispatcher = Connection.run_selinon_flow(flow_name, node_args)
     return {"dispatcher_id": dispatcher.id, "flow_name": flow_name}, 201
 
+
 @requires_initialized_selinon
-def post_transaction(title, category, currency, second_party, amount):
+def post_transactions(title, category, currency, second_party, amount):
     logger.info("Saving transaction %s", title)
-    db = StoragePool.get_connected_storage("PostreSQL")
+    db = StoragePool.get_connected_storage("PostgreSQL")
     transaction_id = db.create_transaction(title, category, currency, second_party, amount)
     return {"transaction_id": transaction_id}
