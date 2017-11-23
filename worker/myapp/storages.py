@@ -121,7 +121,7 @@ class Budget(_Base):
 
     def to_dict(self):
         return {
-            'category': self.category.name,
+            'category': self.category,
             'month': self.month,
             'year': self.year,
             'amount': self.amount
@@ -246,4 +246,33 @@ class SqlStorage(DataStorage):
         result = []
         for t in transactions:
             result.append(t.to_dict())
+        return result
+
+    def get_transactions_per_category(self, category):
+        assert self.is_connected()
+        transactions = self.session.query(Transaction).all()
+        result = []
+        for t in transactions:
+            result.append(t.to_dict())
+        return result
+
+    def create_budgets(self, category, month, year, amount):
+        assert self.is_connected()
+
+        budget = Budget(category, month, year, amount)
+        try:
+            self.session.add(budget)
+            self.session.commit()
+        except Exception:
+            self.session.rollback()
+            raise
+
+        return budget.id
+
+    def get_budgets(self):
+        assert self.is_connected()
+        budgets = self.session.query(Budget).all()
+        result = []
+        for b in budgets:
+            result.append(b.to_dict())
         return result

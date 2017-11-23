@@ -34,6 +34,13 @@ paths:
       responses:
         200:
           description: Transaction has been recorded
+    get:
+      tags: [Transactions]
+      operationId: selinon_api.api_v1.get_transactions
+      summary: Get a list of transactions
+      responses:
+        200:
+          description: List of all transactions
   /categories/{category}/transactions:
     get:
       tags: [Categories]
@@ -59,6 +66,26 @@ paths:
       tags: [Categories]
       operationId: selinon_api.api_v1.get_categories
       summary: Get list of categories
+      responses:
+        200:
+          description: List of categories 
+  /budgets:
+    post:
+      tags: [Budgets]
+      operationId: selinon_api.api_v1.post_budgets
+      summary: Create a budget
+      parameters:
+        - $ref: "#/parameters/category"
+        - $ref: "#/parameters/month"
+        - $ref: "#/parameters/year"
+        - $ref: "#/parameters/amount"
+      responses:
+        200:
+          description: Budget has been recorded
+    get:
+      tags: [Budgets]
+      operationId: selinon_api.api_v1.get_budgets
+      summary: Get list of budgets
       responses:
         200:
           description: List of categories 
@@ -126,6 +153,18 @@ parameters:
     required: true
     description: Category name
     type: string
+  month:
+    name: month
+    in: query
+    required: true
+    description: Budget month
+    type: number
+  year:
+    name: year
+    in: query
+    required: true
+    description: Budget year
+    type: number
 
 definitions:
   QueryKwargs:
