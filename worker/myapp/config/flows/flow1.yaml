@@ -2,11 +2,13 @@
   flow-definitions:
     - name: flow1
       queue: flow1_v0
+      node_args_from_first: true
       sampling:
         name: constant
         args:
           retry: 2
       edges:
         - from:
-          to:
-            - retrieve_transactions
+          to: retrieve_transactions
+        - from: retrieve_transactions
+          to: assign_category

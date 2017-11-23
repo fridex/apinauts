@@ -177,9 +177,24 @@ class SqlStorage(DataStorage):
         assert record.task_name == task_name  # nosec
         return record.result
 
-    def store(self, node_args, flow_name, task_name, task_id, result):  # noqa
-        assert self.is_connected()  # nosec
+    def store(self, node_args, flow_name, task_name, task_id, result):
+        assert self.is_connected()
 
+        record = Result(node_args, flow_name, task_name, task_id, result)
+        try:
+            self.session.add(record)
+            self.session.commit()
+        except Exception:
+            self.session.rollback()
+            raise
+
+        return record.id
+
+    def store_transactions(self, result):
+        if not self.is_connected():
+            self.connect()
+
+        added = []
         for entry in result:
             result = Transaction(
                 title=entry['title'],
@@ -193,6 +208,7 @@ class SqlStorage(DataStorage):
             try:
                 self.session.add(result)
                 self.session.commit()
+                added.append(entry['id'])
             except IntegrityError:
                 _logger.debug("Transaction with bank id %r is already stored", entry['id'])
                 self.session.rollback()
@@ -200,7 +216,7 @@ class SqlStorage(DataStorage):
                 self.session.rollback()
                 raise
 
-        return task_id
+        return added
 
     def store_error(self, node_args, flow_name, task_name, task_id, exc_info):  # noqa
         # just to make pylint happy
