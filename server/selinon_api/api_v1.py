@@ -43,8 +43,14 @@ def post_categories(name, hidden=False):
 
 @requires_initialized_selinon
 def get_categories():
-    logger.info("Getting transactions")
+    logger.info("Getting categories")
     db = StoragePool.get_connected_storage("PostgreSQL")
     categories = db.get_categories()
     return categories
 
+@requires_initialized_selinon
+def get_transactions_per_category(category):
+    logger.info("Getting transactions for category %s", category)
+    db = StoragePool.get_connected_storage("PostgreSQL")
+    transactions = db.get_transactions_per_category(name)
+    return transactions

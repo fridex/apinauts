@@ -34,6 +34,16 @@ paths:
       responses:
         200:
           description: Transaction has been recorded
+  /categories/{category}/transactions:
+    get:
+      tags: [Categories]
+      operationId: selinon_api.api_v1.get_transactions_per_category
+      summary: Get transaction for category
+      parameters:
+        - $ref: "#/parameters/category_in_path"
+      responses:
+        200:
+          description: Transaction for given category
   /categories:
     post:
       tags: [Categories]
@@ -52,12 +62,6 @@ paths:
       responses:
         200:
           description: List of categories 
-          #content:
-          #  application/json:
-          #    schema:
-          #      type: array
-          #      items:
-          #        $ref: "#/definitions/QueryKwargs"
 
 parameters:
   flow_name:
@@ -115,6 +119,12 @@ parameters:
     required: false
     description: Is category hidden
     type: boolean
+  category_in_path:
+    name: category
+    in: path
+    required: true
+    description: Category name
+    type: string
 
 definitions:
   QueryKwargs:
@@ -122,13 +132,3 @@ definitions:
     additionalProperties: true
     example:
       foo: "bar"
-  #Category:
-  #  type: object
-  #  properties:
-  #    name:
-  #      type: string
-  #      description: Name of the category
-  #    hidden:
-  #      type: boolean
-  #      description: Is a category hidden
-

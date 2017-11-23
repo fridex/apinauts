@@ -211,3 +211,11 @@ class SqlStorage(DataStorage):
         for category in categories:
             result.append(category.to_dict())
         return result
+
+    def get_transactions_per_category(self, category):
+        assert self.is_connected()
+        transactions = self.session.query(Transaction).filter(Transaction.category == category).all()
+        result = []
+        for t in transactions:
+            result.append(t.to_dict())
+        return result
