@@ -11,7 +11,7 @@ from selinon import SelinonTask
 
 class RetrieveTransactionsTask(SelinonTask):
     URL = "https://www.csast.csas.cz/webapi/api/v3/netbanking/my/transactions"
-    TOKEN = '3/srEu6I5NpglDal4equfztOrXlRFdjmsCpndRKcEcQRNX1xbzTQ8rAZ0Tc1kRglGn'
+    TOKEN = '3/3UNLfw0XRkzTqz47DrnNcuxDSevw1T3pSeO665q7LKFbOjEIRynb3djsYA5y6fAI'
     API_KEY = "4b8d5c6b-2101-464b-a987-0571f8ead003"
 
     @staticmethod
@@ -20,11 +20,11 @@ class RetrieveTransactionsTask(SelinonTask):
             "id": transaction.get("id"),
             "title": transaction.get("title"),
             "cardTransaction": transaction.get("cardId") is not None,
-            "amount": transaction.get("amount").get("value") / 10 ** transaction.get("amount").get("precision")
+            "amount": transaction.get("amount").get("value") / 10 ** transaction.get("amount").get("precision"),
             "currency": transaction.get("amount").get("currency")
         }
 
-        if result.get(amount) > 0:
+        if result.get("amount") > 0:
             result["secondParty"] = transaction.get("senderName")
         else:
             result["secondParty"] = transaction.get("receiverName")
