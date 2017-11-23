@@ -65,15 +65,17 @@ class Transaction(_Base):
     direction = Column(String(5))
     card_transaction = Column(Boolean)
     amount = Column(Float)
-    reciever_iban = Column(String(30))
+    reciever = Column(String(128))
+    currency = Column(String(3))
 
-    def __init__(self, id, title, direction, card_transaction, amount, reciever_iban):
+    def __init__(self, id, title, direction, card_transaction, amount, reciever, currency):
         self.id = id
         self.title = title
         self.direction = direction
         self.card_transaction = card_transaction
         self.amount = amount
-        self.reciever_iban = reciever_iban
+        self.reciever = reciever
+        self.currency = currency
 
 class Budget(_Base):
     """Record for budget"""
