@@ -90,13 +90,12 @@ class Transaction(_Base):
         return {
             'bank_transaction_id': self.bank_transaction_id,
             'title': self.title,
-            'card_transaction' self.card_transaction,
+            'card_transaction': self.card_transaction,
             'amount': self.amount,
             'second_party': self.second_party,
             'currency': self.currency,
             'category': self.category.name
         }
-
 
 
 class Budget(_Base):
@@ -105,7 +104,7 @@ class Budget(_Base):
     __tablename__ = 'budget'
 
     id = Column(Integer, Sequence('budget_id'), primary_key=True)  # pylint: disable=invalid-name
-    category = Column(String(128)) #FIXME - how to do foreign key?
+    category = Column(String, ForeignKey(Category.name))
     month = Column(Integer)
     year = Column(Integer)
     amount = Column(Float)
@@ -115,6 +114,14 @@ class Budget(_Base):
         self.month = month
         self.year = year
         self.amount = amount
+
+    def to_dict(self):
+        return {
+            'category': self.category.name,
+            'month': self.month,
+            'year': self.year,
+            'amount': self.amount
+        }
 
 
 class SqlStorage(DataStorage):
