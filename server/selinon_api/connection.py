@@ -5,6 +5,7 @@
 # This file is part of Selinon project.
 # ######################################################################
 
+import functools
 from selinon import run_flow
 from myapp.configuration import init
 
@@ -24,9 +25,21 @@ class Connection(object):
         :param node_args: flow arguments
         :return: celery.AsyncResult describing dispatcher task
         """
+        cls.init()
+        return run_flow(flow_name, node_args)
+
+    @classmethod
+    def init(cls):
+        """Init connection and initialize selinon configuration if needed."""
         if not cls._connected:
             # It is not necessary to connect to result backend, we just publish messages
             init(with_result_backend=False)
             cls._connected = True
 
-        return run_flow(flow_name, node_args)
+
+def requires_initialized_selinon(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        Connection.init()
+        return func(*args, **kwargs)
+    return wrapper

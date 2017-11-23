@@ -7,11 +7,13 @@
 
 import logging
 from .connection import Connection
+from .connection import requires_initialized_selinon
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+@requires_initialized_selinon
 def post_run_flow(flow_name, node_args=None):
     """ Handler called on POST on /api/v1/run-flow
 
