@@ -164,3 +164,23 @@ class SqlStorage(DataStorage):
             raise
 
         return transaction.id
+
+    def create_categories(self, name, hidden):
+        assert self.is_connected()
+
+        category = Category(name, hidden)
+        try:
+            self.session.add(category)
+            self.session.commit()
+        except Exception:
+            self.session.rollback()
+            raise
+
+        return category.name
+
+     def get_categories(self):
+        assert self.is_connected()
+
+        categories = self.session.query(Category).all()
+
+        return categories

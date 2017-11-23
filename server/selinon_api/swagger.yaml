@@ -34,6 +34,31 @@ paths:
       responses:
         200:
           description: Transaction has been recorded
+  /categories:
+    post:
+      tags: [Categories]
+      operationId: selinon_api.api_v1.post_categories
+      summary: Create a category
+      parameters:
+        - $ref: "#/parameters/name"
+        - $ref: "#/parameters/hidden"
+      responses:
+        200:
+          description: Category has been recorded
+    get:
+      tags: [Categories]
+      operationId: selinon_api.api_v1.get_categories
+      summary: Get list of categories
+      responses:
+        200:
+          description: List of categories 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/definitions/Category"
+  
 
 parameters:
   flow_name:
@@ -79,7 +104,18 @@ parameters:
     required: true
     description: Amount of transaction
     type: number
-
+  name:
+    name: name
+    in: query
+    required: true
+    description: Category name
+    type: string
+  hidden:
+    name: hidden
+    in: query
+    required: false
+    description: Is category hidden
+    type: boolean
 
 definitions:
   QueryKwargs:
@@ -87,4 +123,13 @@ definitions:
     additionalProperties: true
     example:
       foo: "bar"
+  Category:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of the category
+      hidden:
+        type: boolean
+        description: Is a category hidden
 
