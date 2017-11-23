@@ -33,6 +33,7 @@ class RetrieveTransactionsTask(SelinonTask):
         if page:
             url = "%s?page=%d" % (url, page)
         req = requests.request("GET", url, headers={"web-api.key": api_key, "Authorization": "Bearer %s" % token})
+        req.raise_for_status()
         data = req.json()
 
         if data.get("currentPage") < data.get("totalPages", 0) - 1:
