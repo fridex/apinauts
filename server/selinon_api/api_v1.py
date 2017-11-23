@@ -54,3 +54,24 @@ def get_transactions_per_category(category):
     db = StoragePool.get_connected_storage("PostgreSQL")
     transactions = db.get_transactions_per_category(category)
     return transactions
+
+@requires_initialized_selinon
+def get_transactions():
+    logger.info("Getting transactions")
+    db = StoragePool.get_connected_storage("PostgreSQL")
+    transactions = db.get_transactions()
+    return transactions
+
+@requires_initialized_selinon
+def post_budgets(category, month, year, amount):
+    logger.info("Saving budget for category %s", category)
+    db = StoragePool.get_connected_storage("PostgreSQL")
+    budget_id = db.create_budgets(category, month, year, amount)
+    return {"budget_id": budget_id}
+
+@requires_initialized_selinon
+def get_budgets():
+    logger.info("Getting budgets")
+    db = StoragePool.get_connected_storage("PostgreSQL")
+    budgets = db.get_budgets()
+    return budgets
