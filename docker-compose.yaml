@@ -31,7 +31,6 @@ services:
     links:
       - broker
       - redis
-      - mongo
       - postgres
     volumes:
       - ./worker/myapp:/usr/lib/python3.5/site-packages/myapp:ro,z
