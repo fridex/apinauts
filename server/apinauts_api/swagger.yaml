@@ -12,7 +12,7 @@ paths:
   /run-flow:
     post:
       tags: [Flow]
-      operationId: selinon_api.api_v1.post_run_flow
+      operationId: apinauts_api.api_v1.post_run_flow
       summary: Run a flow
       parameters:
         - $ref: "#/parameters/flow_name"

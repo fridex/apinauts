@@ -53,7 +53,7 @@ services:
 
   redis:
     image: redis:3.2.1
-    container_name: selinon-redis
+    container_name: apinauts-redis
     network_mode: bridge
     ports:
       - 6379:6379
