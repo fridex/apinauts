@@ -1,0 +1,21 @@
+FROM fedora:24
+MAINTAINER Fridolin Pokorny <fridolin.pokorny@gmail.com>
+ENV LANG=en_US.utf8
+
+# Install worker
+COPY worker /tmp/worker
+RUN pushd /tmp/worker && \
+  pip3 install . && \
+  popd && \
+  rm -rf /tmp/worker
+
+# Install Selinonlib and Selinon manually so we have latest master,
+COPY hack/install_selinon.sh /tmp/
+RUN /tmp/install_selinon.sh && rm /tmp/install_selinon.sh
+
+COPY hack/worker.sh /usr/bin/
+
+RUN useradd worker --create-home
+WORKDIR /home/worker
+USER worker
+CMD ["worker.sh"]

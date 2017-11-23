@@ -1,0 +1,88 @@
+version: '2'
+services:
+
+  ## Demo
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    container_name: apinauts-server
+    network_mode: bridge
+    privileged: true
+    ports:
+      - 34000:34000
+    links:
+      - broker
+      - redis
+    volumes:
+      - ./worker/myapp:/usr/lib/python3.5/site-packages/myapp:ro,z
+      - ./selinon/selinon:/usr/lib/python3.5/site-packages/selinon:ro,z
+      - ./selinonlib/selinonlib:/usr/lib/python3.5/site-packages/selinonlib:ro,z
+    environment:
+      SERVICE_PORT: 34000
+      BROKER_URL: amqp://broker:5672
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile-worker
+    network_mode: bridge
+    links:
+      - broker
+      - redis
+      - mongo
+      - postgres
+    volumes:
+      - ./worker/myapp:/usr/lib/python3.5/site-packages/myapp:ro,z
+      - ./selinon/selinon:/usr/lib/python3.5/site-packages/selinon:ro,z
+      - ./selinonlib/selinonlib:/usr/lib/python3.5/site-packages/selinonlib:ro,z
+    environment:
+      BROKER_URL: amqp://broker:5672
+      RESULT_BACKEND_URL: redis://redis:6379/0
+      #WORKER_QUEUES: flow1_v0
+
+  # Message broker
+
+  broker:
+    image: rabbitmq:3.6.6-management
+    container_name: apinauts-broker
+    network_mode: bridge
+    ports:
+      - 5672:5672
+      - 35000:15672
+
+  #flower:
+  #  image: endocode/flower
+  #  container_name: apinauts-flower
+  #  network_mode: bridge
+  #  ports:
+  #    - 36000:5555
+  #  links:
+  #    - broker
+  #  environment:
+  #    RABBITMQ_SERVICE_SERVICE_HOST: broker
+
+  ## Databases
+
+  postgres:
+    image: postgres:9.5
+    container_name: apinauts-postgres
+    network_mode: bridge
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  pgweb:
+    image: sosedoff/pgweb
+    container_name: apinauts-pgweb
+    network_mode: bridge
+    links:
+      - postgres
+    ports:
+      - 8081:8081
+    environment:
+      # sslmode=disable because: https://github.com/sosedoff/pgweb/issues/23#issuecomment-60840307
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable

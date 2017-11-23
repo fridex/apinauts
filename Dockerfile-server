@@ -1,0 +1,26 @@
+FROM fedora:24
+MAINTAINER Fridolin Pokorny <fridolin.pokorny@redhat.com>
+ENV LANG=en_US.utf8
+
+# Install server
+COPY server /tmp/server
+RUN pushd /tmp/server && \
+  pip3 install . && \
+  popd && \
+  rm -rf /tmp/server
+
+# Install worker files, we need them mainly because of configs and Celery settings establishment
+COPY worker /tmp/worker
+RUN pushd /tmp/worker && \
+  pip3 install . && \
+  popd && \
+  rm -rf /tmp/worker
+
+# Install Selinonlib and Selinon manually so we have latest master
+COPY hack/install_selinon.sh /tmp/
+RUN /tmp/install_selinon.sh && rm /tmp/install_selinon.sh
+
+RUN useradd server --create-home
+WORKDIR /home/server
+USER server
+CMD ["selinon-api.py"]
