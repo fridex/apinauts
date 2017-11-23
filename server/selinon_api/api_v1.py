@@ -33,3 +33,18 @@ def post_transactions(title, category, currency, second_party, amount):
     db = StoragePool.get_connected_storage("PostgreSQL")
     transaction_id = db.create_transaction(title, category, currency, second_party, amount)
     return {"transaction_id": transaction_id}
+
+@requires_initialized_selinon
+def post_categories(name, hidden=False):
+    logger.info("Saving category %s", name)
+    db = StoragePool.get_connected_storage("PostgreSQL")
+    category_name = db.create_category(name, hidden)
+    return {"category_name": category_name}
+
+@requires_initialized_selinon
+def get_categories():
+    logger.info("Getting transactions")
+    db = StoragePool.get_connected_storage("PostgreSQL")
+    categories = db.get_categories()
+    return categories
+
