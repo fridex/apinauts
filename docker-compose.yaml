@@ -15,6 +15,7 @@ services:
     links:
       - broker
       - redis
+      - postgres
     volumes:
       - ./worker/myapp:/usr/lib/python3.5/site-packages/myapp:ro,z
       - ./server/selinon_api:/usr/lib/python3.5/site-packages/selinon_api:ro,z
