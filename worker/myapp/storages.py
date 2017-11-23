@@ -250,26 +250,37 @@ class SqlStorage(DataStorage):
 
     def get_categories(self):
         assert self.is_connected()
-        categories = self.session.query(Category).all()
         result = []
-        for category in categories:
-            result.append(category.to_dict())
+
+        try:
+            categories = self.session.query(Category).all()
+            for category in categories:
+                result.append(category.to_dict())
+        except Exception:
+            self.session.rollback()
         return result
 
     def get_transactions_per_category(self, category):
         assert self.is_connected()
-        transactions = self.session.query(Transaction).filter(Transaction.category == category).all()
         result = []
-        for t in transactions:
-            result.append(t.to_dict())
+
+        try:
+            transactions = self.session.query(Transaction).filter(Transaction.category == category).all()
+            for t in transactions:
+                result.append(t.to_dict())
+        except Exception:
+            self.session.rollback()
         return result
 
-    def get_transactions_per_category(self, category):
+    def get_transactions(self):
         assert self.is_connected()
-        transactions = self.session.query(Transaction).all()
         result = []
-        for t in transactions:
-            result.append(t.to_dict())
+        try:
+            transactions = self.session.query(Transaction).all()
+            for t in transactions:
+                result.append(t.to_dict())
+        except Exception:
+            self.session.rollback()
         return result
 
     def create_budgets(self, category, month, year, amount):
@@ -287,8 +298,13 @@ class SqlStorage(DataStorage):
 
     def get_budgets(self):
         assert self.is_connected()
-        budgets = self.session.query(Budget).all()
         result = []
-        for b in budgets:
-            result.append(b.to_dict())
+
+        try:
+            budgets = self.session.query(Budget).all()
+            for b in budgets:
+                result.append(b.to_dict())
+        except Exception:
+            self.session.rollback()
+        
         return result
