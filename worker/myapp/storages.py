@@ -9,7 +9,7 @@
 from selinon import DataStorage
 
 try:
-    from sqlalchemy import (create_engine, Column, Integer, Sequence, String)
+    from sqlalchemy import (create_engine, Column, Integer, Sequence, String, Boolean, Float)
     from sqlalchemy.dialects.postgresql import JSONB
     from sqlalchemy.ext.declarative import declarative_base
     from sqlalchemy.orm import sessionmaker
@@ -43,6 +43,52 @@ class Result(_Base):
         self.result = result
         self.node_args = node_args
 
+class Category(_Base):
+    """Record for categries"""
+
+    __tablename__ = 'category'
+
+    name = Column(String(128), , primary_key=True)
+    hidden = Column(Boolean)
+
+    def __init__(self, name, hidden):
+        self.name = name
+        self.hidden = hidden
+
+class Transaction(_Base):
+    """Record for transactions"""
+
+    __tablename__ = 'transaction'
+
+    id = Column(String(16), primary_key=True)
+    title = Column(String(128))
+    direction = Column(String(5))
+    card_transaction = Column(Boolean)
+    amount = Column(Float)
+    reciever_iban = Column(String(30))
+
+    def __init__(self, id, title, direction, card_transaction, amount, reciever_iban):
+        self.id = id
+        self.title = title
+        self.direction = direction
+        self.card_transaction = card_transaction
+        self.amount = amount
+        self.reciever_iban = reciever_iban
+
+class Budget(_Base):
+    """Record for budget"""
+
+    id = Column(Integer, Sequence('budget_id'), primary_key=True)  # pylint: disable=invalid-name
+    category = Column(String(128)) #FIXME - how to do foreign key?
+    month = Column(Integer)
+    year = Column(Integer)
+    amount = Column(Float)
+
+    def __init__(self category, month, year, amount):
+        self.category = category
+        self.month = month
+        self.year = year
+        self.amount = amount
 
 class SqlStorage(DataStorage):
     """Selinon SQL Database adapter - PostgreSQL."""
