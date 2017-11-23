@@ -9,4 +9,4 @@
       edges:
         - from:
           to:
-            - hello_task
+            - retrieve_transactions

@@ -5,36 +5,50 @@
 # This file is part of Selinon project.
 # ######################################################################
 
+import requests
 from selinon import SelinonTask
 
 
-class HelloTask(SelinonTask):
+class RetrieveTransactionsTask(SelinonTask):
+    URL = "https://www.csast.csas.cz/webapi/api/v3/netbanking/my/transactions"
+    TOKEN = "3/srEu6I5NpglDal4equfztOrXlRFdjmsCpndRKcEcQRNX1xbzTQ8rAZ0Tc1kRglGn"
+    API_KEY = "4b8d5c6b-2101-464b-a987-0571f8ead003"
+
+    @staticmethod
+    def clear_transaction(transaction):
+        return {
+            "id": transaction.get("id"),
+            "title": transaction.get("title"),
+            "cardTransaction": transaction.get("cardId") is not None,
+            "receiverIBAN": transaction.get("receiver").get("iban"),
+            "direction": "IN" if transaction.get("txDirection") == "INCOMING" else "OUT",
+            "amount": transaction.get("amount").get("value") / 10 ** transaction.get("amount").get("precision")
+        }
+
+    @classmethod
+    def get_transactions(cls, url, token, api_key, page=None):
+        result = []
+        next_page = None
+
+        if page:
+            url = "%s?page=%d" % (url, page)
+        req = requests.request("GET", url, headers={"web-api.key": api_key, "Authorization": "Bearer %s" % token})
+        data = req.json()
+
+        if data.get("currentPage") < data.get("totalPages", 0) - 1:
+            next_page = data.get("currentPage", 0) + 1
+
+        if data.get("collection"):
+            for t in data.get("collection"):
+                result.append(cls.clear_transaction(t))
+
+        return result, next_page
+
     def run(self, node_args):
-        """ A simple hello world """
-        if 'name' not in node_args.keys():
-            raise ValueError("Please provide your name!")
-        return {"result": "Hello, {}!".format(node_args['name'])}
+        page = 0
+        result = []
+        while page is not None:
+            data, page = self.get_transactions(self.URL, self.TOKEN, self.API_KEY, page)
+            result += data
 
-
-class FibonacciTask(SelinonTask):
-    def run(self, node_args):
-        """ Counting N+1 item in Fibonacci sequence
-
-        :param node_args: count (referring to N+1) how many times should be recursion done
-        :return: dict, previous - result of the previous task,
-                       me - sum of previous tasks,
-                       count - current recursion count
-        """
-        if self.task_name in self.parent:
-            parent_result = self.parent_task_result(self.task_name)
-            return {
-                'previous': parent_result['me'],
-                'me': parent_result['previous'] + parent_result['me'],
-                'count': parent_result['count'] - 1
-            }
-        else:
-            return {
-                'previous': 0,
-                'me': 1,
-                'count': node_args['count']
-            }
+        return result
