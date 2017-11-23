@@ -52,5 +52,5 @@ def get_categories():
 def get_transactions_per_category(category):
     logger.info("Getting transactions for category %s", category)
     db = StoragePool.get_connected_storage("PostgreSQL")
-    transactions = db.get_transactions_per_category(name)
+    transactions = db.get_transactions_per_category(category)
     return transactions
