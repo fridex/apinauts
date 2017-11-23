@@ -131,6 +131,8 @@ class Budget(_Base):
 class SqlStorage(DataStorage):
     """Selinon SQL Database adapter - PostgreSQL."""
 
+    DEFAULT_CATEGORIES = ("Mortgage", "Car", "Food", "Entertainment", "Presents", "Travel", "Bills", "Remaining")
+
     def __init__(self, connection_string, encoding='utf-8', echo=False):
         """Initialize PostgreSQL adapter from YAML configuration file.
         :param connection_string:
@@ -145,12 +147,22 @@ class SqlStorage(DataStorage):
     def is_connected(self):  # noqa
         return self.session is not None
 
+    def _add_categories(self):
+        for category_name in self.DEFAULT_CATEGORIES:
+            cat = Category(name=category_name)
+            try:
+                self.session.add(cat)
+            except IntegrityError:
+                self.session.rollback()
+                _logger.warning("Failed to add category, probably already present")
+
     def connect(self):  # noqa
         if not database_exists(self.engine.url):
             create_database(self.engine.url)
 
         self.session = sessionmaker(bind=self.engine)()
         _Base.metadata.create_all(self.engine)
+        self._add_categories()
 
     def disconnect(self):  # noqa
         if self.is_connected():
