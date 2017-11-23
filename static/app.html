@@ -5,24 +5,84 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="OpenBudget Team">
 
     <title>OpenBudget</title>
 
     <link href="bootstrap.min.css" rel="stylesheet">
     <link href="dashboard.css" rel="stylesheet">
     <style type="text/css">
+        #transactions {
+            display: none;
+        }
 
+        #categories {
+            display: none;
+        }
+
+        #budgets {
+            /* display: none; */
+        }
+
+        .badge>a {
+            color: #aaaaaa;
+        }
     </style>
 </head>
 
 <body>
+    <div class="modal modal-dialog" role="dialog" id="add-transaction-modal" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>New Transaction</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-inline col-form-label">
+                        <label for="transaction-value">Value:</label>&nbsp;
+                        <input type="value" id="transaction-value" class="form-control" placeholder="Value of transaction">&nbsp;
+                        <select class="form-control" id="exampleSelect1">
+                            <option>CZK</option>
+                            <option>EUR</option>
+                            <option>USD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <hr />
+                        <label for="exampleSelect1">Category:</label>
+                        <select class="form-control" id="exampleSelect1">
+                            <option>Mortgage</option>
+                            <option>Travel</option>
+                            <option>Car</option>
+                            <option>Entertainment</option>
+                            <option>Presents</option>
+                            <option>Bills</option>
+                            <option>Food</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Second party:</label>
+                        <input type="value" id="2nd-party" class="form-control" placeholder="2nd party">&nbsp;
+                        <hr />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal" />New Transaction</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
         <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
             aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#"><span class="alert-link">Open</span>Budget</a>
+        <a class="navbar-brand" href="#">
+            <span class="alert-link">Open</span>Budget</a>
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
@@ -41,10 +101,6 @@
                     <a class="nav-link" href="#">Help</a>
                 </li>
             </ul>
-            <form class="form-inline mt-2 mt-md-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
         </div>
     </nav>
 
@@ -70,7 +126,7 @@
             </nav>
 
             <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-                <h1 class="section-name">Monthly Status</h1>
+                <h1 class="section-name">Categories</h1>
 
                 <div id="transactions">
                     <section class="row text-center placeholders">
@@ -81,24 +137,27 @@
                         <div class="col">
                             <h2>Transaction list</h2>
                         </div>
+
                         <div class="col col-lg-2">
-                            <button class="btn btn-info offset-3">New Transaction</button>
+                            <button class="btn btn-info offset-3" data-toggle="modal" data-target="#add-transaction-modal">New Transaction</button>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Header</th>
-                                    <th>Header</th>
-                                    <th>Header</th>
-                                    <th>Header</th>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>2nd Party</th>
+                                    <th>Amount</th>
+                                    <th>Currency</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>1,001</td>
+                                    <td>Lorem</td>
                                     <td>Lorem</td>
                                     <td>ipsum</td>
                                     <td>dolor</td>
@@ -106,6 +165,7 @@
                                 </tr>
                                 <tr>
                                     <td>1,002</td>
+                                    <td>Lorem</td>
                                     <td>amet</td>
                                     <td>consectetur</td>
                                     <td>adipiscing</td>
@@ -113,6 +173,7 @@
                                 </tr>
                                 <tr>
                                     <td>1,003</td>
+                                    <td>Lorem</td>
                                     <td>Integer</td>
                                     <td>nec</td>
                                     <td>odio</td>
@@ -120,99 +181,125 @@
                                 </tr>
                                 <tr>
                                     <td>1,003</td>
+                                    <td>Lorem</td>
                                     <td>libero</td>
                                     <td>Sed</td>
                                     <td>cursus</td>
                                     <td>ante</td>
                                 </tr>
-                                <tr>
-                                    <td>1,004</td>
-                                    <td>dapibus</td>
-                                    <td>diam</td>
-                                    <td>Sed</td>
-                                    <td>nisi</td>
-                                </tr>
-                                <tr>
-                                    <td>1,005</td>
-                                    <td>Nulla</td>
-                                    <td>quis</td>
-                                    <td>sem</td>
-                                    <td>at</td>
-                                </tr>
-                                <tr>
-                                    <td>1,006</td>
-                                    <td>nibh</td>
-                                    <td>elementum</td>
-                                    <td>imperdiet</td>
-                                    <td>Duis</td>
-                                </tr>
-                                <tr>
-                                    <td>1,007</td>
-                                    <td>sagittis</td>
-                                    <td>ipsum</td>
-                                    <td>Praesent</td>
-                                    <td>mauris</td>
-                                </tr>
-                                <tr>
-                                    <td>1,008</td>
-                                    <td>Fusce</td>
-                                    <td>nec</td>
-                                    <td>tellus</td>
-                                    <td>sed</td>
-                                </tr>
-                                <tr>
-                                    <td>1,009</td>
-                                    <td>augue</td>
-                                    <td>semper</td>
-                                    <td>porta</td>
-                                    <td>Mauris</td>
-                                </tr>
-                                <tr>
-                                    <td>1,010</td>
-                                    <td>massa</td>
-                                    <td>Vestibulum</td>
-                                    <td>lacinia</td>
-                                    <td>arcu</td>
-                                </tr>
-                                <tr>
-                                    <td>1,011</td>
-                                    <td>eget</td>
-                                    <td>nulla</td>
-                                    <td>Class</td>
-                                    <td>aptent</td>
-                                </tr>
-                                <tr>
-                                    <td>1,012</td>
-                                    <td>taciti</td>
-                                    <td>sociosqu</td>
-                                    <td>ad</td>
-                                    <td>litora</td>
-                                </tr>
-                                <tr>
-                                    <td>1,013</td>
-                                    <td>torquent</td>
-                                    <td>per</td>
-                                    <td>conubia</td>
-                                    <td>nostra</td>
-                                </tr>
-                                <tr>
-                                    <td>1,014</td>
-                                    <td>per</td>
-                                    <td>inceptos</td>
-                                    <td>himenaeos</td>
-                                    <td>Curabitur</td>
-                                </tr>
-                                <tr>
-                                    <td>1,015</td>
-                                    <td>sodales</td>
-                                    <td>ligula</td>
-                                    <td>in</td>
-                                    <td>libero</td>
-                                </tr>
                             </tbody>
                         </table>
 
                     </div>
+                </div>
+
+                <div id="budgets">
+                    <form>
+                        <div class="form-group">
+                            <label for="budgetName">Budget name:</label>
+                            <input type="text" class="form-control" id="budgetName" placeholder="Enter new budget name here">
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryName">Category:</label>
+                            <select class="form-control" id="categoryName">
+                                <option>Mortgages</option>
+                                <option>Entertainment</option>
+                                <option>Food</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="month">Month:</label>
+                            <select class="form-control" id="month">
+                                <option>October</option>
+                                <option>November</option>
+                                <option>December</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="value">Value:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">CZK</span>
+                                <input type="text" class="form-control" aria-label="Amount (to the nearest Czech koruna)">
+                                <span class="input-group-addon">.00</span>
+                            </div>
+                        </div>
+                        <hr />
+                        <div>
+                            <button type="submit" class="btn btn-primary">Create new budget</button>
+                        </div>
+                    </form>
+                    <hr />
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">Category: Mortgages</h5>
+                            </div>
+                            <p class="mb-1">November</p>
+                            <small>15.000,00 CZK</small>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">Category: Bills</h5>
+                            </div>
+                            <p class="mb-1">November</p>
+                            <small>10.000,00 CZK</small>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="categories">
+                    <form>
+                        <div class="form-group">
+                            <label for="categoryName">Category name:</label>
+                            <input type="text" class="form-control" id="categoryName" placeholder="Enter new category name here">
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">Create new category</button>
+                        </div>
+                    </form>
+
+                    <hr />
+
+                    <ul class="list-group">
+                        <li class="list-group-item justify-content-between">
+                            Mortgages
+                            <span class="badge badge-default badge-pill">14
+                                <a href="#">&times;</a>
+                            </span>
+                        </li>
+                        <li class="list-group-item justify-content-between">
+                            Bills
+                            <span class="badge badge-default badge-pill">17
+                                <a href="#">&times;</a>
+                            </span>
+                        </li>
+                        <li class="list-group-item justify-content-between">
+                            Food
+                            <span class="badge badge-default badge-pill">73
+                                <a href="#">&times;</a>
+                            </span>
+                        </li>
+                        <li class="list-group-item justify-content-between">
+                            Entertainment
+                            <span class="badge badge-default badge-pill">73
+                                <a href="#">&times;</a>
+                            </span>
+                        </li>
+                        <li class="list-group-item justify-content-between">
+                            Car
+                            <span class="badge badge-default badge-pill">73
+                                <a href="#">&times;</a>
+                            </span>
+                        </li>
+                        <li class="list-group-item justify-content-between">
+                            Presents
+                            <span class="badge badge-default badge-pill">73
+                                <a href="#">&times;</a>
+                            </span>
+                        </li>
+                        <li class="list-group-item list-group-item-warning">Default</li>
+                    </ul>
                 </div>
             </main>
         </div>
