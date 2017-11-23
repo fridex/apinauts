@@ -65,4 +65,5 @@ class RetrieveTransactionsTask(SelinonTask):
 
 class AssignCategoryTask(SelinonTask):
     def run(self, node_args):
-        print(node_args)
+        for bank_id in node_args.get('added', []):
+            print(bank_id)
