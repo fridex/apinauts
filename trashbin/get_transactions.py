@@ -2,7 +2,7 @@ import requests
 import json
 
 URL = "https://www.csast.csas.cz/webapi/api/v3/netbanking/my/transactions"
-token = "3/srEu6I5NpglDal4equfztOrXlRFdjmsCpndRKcEcQRNX1xbzTQ8rAZ0Tc1kRglGn"
+token = "3/3UNLfw0XRkzTqz47DrnNcuxDSevw1T3pSeO665q7LKFbOjEIRynb3djsYA5y6fAI"
 api_key = "4b8d5c6b-2101-464b-a987-0571f8ead003"
 
 
@@ -28,6 +28,9 @@ def getTransactions(url, token, api_key, page=None):
 
   if data.get("currentPage") < data.get("totalPages", 0)-1:
     next_page = data.get("currentPage", 0)+1
+
+  print(data)
+  return
 
   if data.get("collection"):
     for t in data.get("collection"):

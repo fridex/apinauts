@@ -11,19 +11,25 @@ from selinon import SelinonTask
 
 class RetrieveTransactionsTask(SelinonTask):
     URL = "https://www.csast.csas.cz/webapi/api/v3/netbanking/my/transactions"
-    TOKEN = '3/DywBVF9tnpveEcnn6qi4qYy7tsCgUCY4j24Splh021Pp535WilPGzj66FAwtaZLh'
+    TOKEN = '3/3UNLfw0XRkzTqz47DrnNcuxDSevw1T3pSeO665q7LKFbOjEIRynb3djsYA5y6fAI'
     API_KEY = "4b8d5c6b-2101-464b-a987-0571f8ead003"
 
     @staticmethod
     def clear_transaction(transaction):
-        return {
+        result = {
             "id": transaction.get("id"),
             "title": transaction.get("title"),
             "cardTransaction": transaction.get("cardId") is not None,
-            "receiverIBAN": transaction.get("receiver").get("iban"),
-            "direction": "IN" if transaction.get("txDirection") == "INCOMING" else "OUT",
-            "amount": transaction.get("amount").get("value") / 10 ** transaction.get("amount").get("precision")
+            "amount": transaction.get("amount").get("value") / 10 ** transaction.get("amount").get("precision"),
+            "currency": transaction.get("amount").get("currency")
         }
+
+        if result.get("amount") > 0:
+            result["secondParty"] = transaction.get("senderName")
+        else:
+            result["secondParty"] = transaction.get("receiverName")
+
+        return result
 
     @classmethod
     def get_transactions(cls, url, token, api_key, page=None):
