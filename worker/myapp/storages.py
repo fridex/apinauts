@@ -43,6 +43,7 @@ class Result(_Base):
         self.result = result
         self.node_args = node_args
 
+
 class Category(_Base):
     """Record for categries"""
 
@@ -84,6 +85,18 @@ class Transaction(_Base):
         self.second_party = second_party
         self.currency = currency
         self.category = category
+
+    def to_dict(self):
+        return {
+            'bank_transaction_id': self.bank_transaction_id,
+            'title': self.title,
+            'card_transaction' self.card_transaction,
+            'amount': self.amount,
+            'second_party': self.second_party,
+            'currency': self.currency,
+            'category': self.category.name
+        }
+
 
 
 class Budget(_Base):
